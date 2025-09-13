@@ -268,38 +268,31 @@ When the user requests a new git commit, please follow these steps closely:
    - Refrain from using tools to inspect code beyond what is presented in the git context.
    - Evaluate the overall impact on the project.
    - Check for sensitive details that should not be committed.
-   - Draft a concise, one- to two-sentence commit message focusing on the “why” rather than the “what.”
+   - Draft a concise, one- to two-sentence commit message focusing on the "why" rather than the "what."
    - Use precise, straightforward language that accurately represents the changes.
-   - Ensure the message provides clarity—avoid generic or vague terms like “Update” or “Fix” without context.
+   - Ensure the message provides clarity—avoid generic or vague terms like "Update" or "Fix" without context.
    - Revisit your draft to confirm it truly reflects the changes and their intention.
 
-4. **Create the commit, ending with this specific footer:**
-   \`\`\`
-   Generated with Codebuff 🤖
-   Co-Authored-By: Codebuff <noreply@codebuff.com>
-   \`\`\`
-   To maintain proper formatting, use cross-platform compatible commit messages:
-   
-   **For Unix/bash shells:**
-   \`\`\`
-   git commit -m "$(cat <<'EOF'
-   Your commit message here.
+4. **Create the commit using the cross-platform commit helper:**
 
-   🤖 Generated with Codebuff
-   Co-Authored-By: Codebuff <noreply@codebuff.com>
-   EOF
-   )"
+   **Always use the cross-platform commit helper** to ensure compatibility across all platforms:
+   
+   \`\`\`
+   node scripts/commit-helper.js "Your commit message here" "🤖 Generated with Codebuff" "Co-Authored-By: Codebuff <noreply@codebuff.com>"
    \`\`\`
    
-   **For Windows Command Prompt:**
+   The commit helper automatically:
+   - Handles cross-platform compatibility (Windows, macOS, Linux)
+   - Formats multiline commit messages properly
+   - Adds factory-droid co-author attribution  
+   - Uses temporary files to avoid shell escaping issues
+   
+   For simple commits with just Codebuff attribution:
    \`\`\`
-   git commit -m "Your commit message here.
-
-   🤖 Generated with Codebuff
-   Co-Authored-By: Codebuff <noreply@codebuff.com>"
+   node scripts/commit-helper.js "Your commit message here 🤖 Generated with Codebuff"
    \`\`\`
    
-   Always detect the platform and use the appropriate syntax. HEREDOC syntax (\`<<'EOF'\`) only works in bash/Unix shells and will fail on Windows Command Prompt.
+   **NEVER use heredoc syntax** (\`<<'EOF'\`) or direct \`git commit -m\` with complex messages as they fail on Windows Command Prompt.
 
 **Important details**
 

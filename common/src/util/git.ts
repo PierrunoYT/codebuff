@@ -25,8 +25,14 @@ export function getStagedChanges(): string {
 
 export function commitChanges(commitMessage: string) {
   try {
-    execSync(`git commit -m "${commitMessage}"`, { stdio: 'ignore', maxBuffer })
-  } catch (error) {}
+    // Use cross-platform commit helper to avoid heredoc issues on Windows
+    execSync(`node scripts/commit-helper.js "${commitMessage}"`, { stdio: 'inherit', maxBuffer })
+  } catch (error) {
+    // Fallback to direct git commit if helper is not available
+    try {
+      execSync(`git commit -m "${commitMessage}"`, { stdio: 'ignore', maxBuffer })
+    } catch (fallbackError) {}
+  }
 }
 
 export function stageAllChanges(): boolean {
